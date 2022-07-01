@@ -1,7 +1,7 @@
 # slac-warc
 
 The [SLAC Earliest Websites](https://searchworks.stanford.edu/view/wk956yb8565)
-collection contains three items:
+collection contains three "Seed" items:
 
 - [SLAC World Wide Web Information](https://searchworks.stanford.edu/view/fm065cw5306)
 - [SLAC (Stanford Linear Accelerator Center)](https://searchworks.stanford.edu/view/cj553qq9651)
