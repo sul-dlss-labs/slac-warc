@@ -1,13 +1,13 @@
 # slac-warc
 
 The [SLAC Earliest Websites](https://searchworks.stanford.edu/view/wk956yb8565)
-collection contains three "Seed" items:
+collection contains three "Web Archive Seed" items:
 
 - [SLAC World Wide Web Information](https://searchworks.stanford.edu/view/fm065cw5306)
 - [SLAC (Stanford Linear Accelerator Center)](https://searchworks.stanford.edu/view/cj553qq9651)
 - [SLACVM Information Service](https://searchworks.stanford.edu/view/qs852wh8529)
 
-Which point to web content that has been archived as part of the SDR web archive object [druid:wx794kg1767](https://argo.stanford.edu/view/druid:wx794kg1767). As we move this content from OpenWayback to pywb we need to reindex the content so that it continues to be available.
+Which point to web content that has been archived as part of the SDR "Web Archive Crawl" object [druid:wx794kg1767](https://argo.stanford.edu/view/druid:wx794kg1767). As we move this WARC content from OpenWayback to pywb we need to reindex it so that it continues to be available.
 
 Some details about how this archived content was assembled can be found in this [presentation](https://www.slideshare.net/aalsum/aalsum-iipcga15/0) by Ahmed AlSum in 2015, as well as this paper from [this paper](https://www.slac.stanford.edu/welcome/slac-pub-7636.html) by Jean Marie Deken in 1997.
 
