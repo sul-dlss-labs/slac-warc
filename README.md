@@ -149,6 +149,16 @@ If we simply convert these CDX entries to CDXJ then future archivists will need 
 
 To support [our work](https://github.com/sul-dlss/was-pywb/issues/60) to persist this provenance data in the SLAC WARC files we decided to use the Rhizome's [proposed](https://labs.rhizome.org/presentations/warc-proposals.html#/) addition of *WARC-Source-URI* and *WARC-Creation-Date* to the [WARC Standard](https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.1/). These headers allow for WARC records to retain information about when and from where the web content was crawled, but also to allow the *WARC-Target-URI* and *WARC-Date* to reflect how the record should be indexed and made accessible. It doesn't look like these headers have made it into the v1.1 specification, but seeing as how they shouldn't disturb indexing or playback they can be used without causing problems. Admittedly this is a corner case that not many people would encounter unless they are reconstructing parts of the web based on materials that are no longer available on the web. But maybe it's something that would be done more often if there were tools that supported it?
 
+There is one final aspect of Ahmed's 2014 reconstruction that is important to mention here. wget was used to archive the content from the SLAC homepage, and CDX entries were created by hand for some of the content so that they appeared to be available at the slacvm.slac.stanford.edu host name. However there are many internal links on pages that point at slacvm.slac.stanford.edu that *did not* get corresponding CDX entries. For example the OpenWayback page https://swap.stanford.edu/19941004000000/http://slacvm.slac.stanford.edu/FIND/slac.html contains links to things like Library News `http://slacvm.slac.stanford.edu/FIND/libnews.html` which work, but other links *People at SLAC* `http://slacvm.slac.stanford.edu/FIND/binlist` which do not. This appears to be because CDX entries were not created for all links.
+
+<img width="800" src="https://raw.githubusercontent.com/sul-dlss-labs/slac-warc/main/images/screenshot1.png">
+
+<img width="800" src="https://raw.githubusercontent.com/sul-dlss-labs/slac-warc/main/images/screenshot2.png">
+
+<img width="800" src="https://raw.githubusercontent.com/sul-dlss-labs/slac-warc/main/images/screenshot3.png">
+
+The new pywb index and WARC data do not fix these pre-existing problems with the reconstructed website.
+
 ## Process
 
 The process for rewriting our WARC data for this SLAC material is to use
