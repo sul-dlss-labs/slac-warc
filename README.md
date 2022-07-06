@@ -7,13 +7,13 @@ collection contains three "Web Archive Seed" items:
 - [SLAC (Stanford Linear Accelerator Center)](https://searchworks.stanford.edu/view/cj553qq9651)
 - [SLACVM Information Service](https://searchworks.stanford.edu/view/qs852wh8529)
 
-Which point to web content that has been archived as part of the SDR "Web Archive Crawl" object [druid:wx794kg1767](https://argo.stanford.edu/view/druid:wx794kg1767). As we move this WARC content from OpenWayback to pywb we need to reindex it so that it continues to be available.
+These items point to web content that has been archived as part of the SDR "Web Archive Crawl" object [druid:wx794kg1767](https://argo.stanford.edu/view/druid:wx794kg1767). As we move this WARC content from OpenWayback to pywb we need to reindex it so that it continues to be available. The problem is that the content was manually added to the CDX index so that content that was archived in 2014 from a archival section of the website appear to be archived at their original times and locations on the web. If we simply reindex the WARC content as is we will lose these access points.
 
 Some details about how this archived content was assembled can be found in this [presentation](https://www.slideshare.net/aalsum/aalsum-iipcga15/0) by Ahmed AlSum in 2015, as well as this paper from [this paper](https://www.slac.stanford.edu/welcome/slac-pub-7636.html) by Jean Marie Deken in 1997.
 
 ## Provenance
 
-Ahmed's slides indicate that wget was used to collect the content from the SLAC website, and we can find evidence of this in the WARC files themselves, since wget writes [resource](https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.1/#resource) records that document how the crawl was performed.
+Ahmed's slides indicate that wget was used to collect the content from the SLAC website, and we can find evidence of this in the WARC files themselves, since wget writes [resource](https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.1/#resource) records that document how the crawl was performed. For example:
 
 ```
 $ warcio extract SLAC_1992.warc 3502455
@@ -33,7 +33,7 @@ Content-Length: 110
 And you can see the log, which was written to the WARC file as well:
 
 ```
-➜  data warcio extract SLAC_1992.warc 3502947 | head -50
+warcio extract SLAC_1992.warc 3502947 | head -50
 WARC/1.0
 WARC-Type: resource
 WARC-Record-ID: <urn:uuid:d6c32419-a961-49a7-ac8c-39e12f8e537e>
@@ -88,7 +88,7 @@ Saving to: ‘wget/www.console
 
 ## Reconstructing the Reconstruction
 
-Ahmed's slides make it clear that significant research using directory listings, search engine research, and interviews guided them in determining *when* particular pages were created and *where* they originally lived on the web. They used this research to create custom CDX entries to make the pages available at that particular time and location in the OpenWayback Machine.
+Ahmed's slides make it clear that significant research using directory listings, search engine results, and interviews guided them in determining *when* particular pages were created and *where* they originally lived on the web. They used this research to create custom CDX entries to make the pages available at particular times and locations in the OpenWayback Machine.
 
 For example this entry in the CDX file:
 
@@ -133,37 +133,45 @@ Content-Type: text/html
 The key things to note here are:
 
 1. The CDX file allows for the lookup of the URL http://slacvm.slac.stanford.edu/FIND/01010008.corpse whereas the WARC record's *WARC-Target-URI* indicates it was actually obtained from http://www.slac.stanford.edu/archive/1996/SLACVM/www/192/rl1162/01010008.corpse (a different URL).
-2. The CDX file allows for the lookup at a particular date/time *1995-01-05 00:00:00* but the *WARC-Date* header indicates it was obtained at 2014-09-24 20:13:56. It's interesting that the *Last-Modified* HTTP header that was acquired from the server wasn't used here 1995-01-05 10:53:28.
+2. The CDX file allows for the lookup at a particular date/time *1995-01-05 00:00:00* but the *WARC-Date* header indicates it was obtained at 2014-09-24 20:13:56. It's interesting that the *Last-Modified* HTTP header that was acquired from the server wasn't used here (1995-01-05 10:53:28).
 
-Moving these WARC records into the new pywb environment requires them to be reindexed. We aren't really interested in preserving what we believe to be the original locations and times--Ahmed has already done that work. But we are interested in preserving the decisions *he* made in constructing these CDX entries, and persisting them in the WARC data so that they can be reindexed now, and in the future, without disturbing their URL and date/time access points. Other parts of the Stanford website and the larger web have linked to these pages in the archive, and we want those to continue to work.
+Also on inspecting the CDX file there are entries for the 2014 crawl:
 
-If we simply convert these CDX entries to CDXJ then future archivists will need to remember to do the same thing if they move the WARC data to a new system. The CDX files really ought to be considered derivatives of the WARC data, and not essential archival objects. Indeed, apart from system level backups these CDX files are not stored in the Stanford Digital Repository.
+```
+slac.stanford.edu/archive/1992/slacvm/spicell/192/rl1414/terryh.tyh239 20140924201340 http://www.slac.stanford.edu/archive/1992/SLACVM/spicell/192/rl1414/terryh.tyh239 text/plain 200 JMVR4AX4XU2B3J2L6MYGBOUP6QJ4GCLZ - - 513081 SLAC_1992.warc
+```
 
-As part of [our work](https://github.com/sul-dlss/was-pywb/issues/60) on this we decided to use the Rhizome's [proposal](https://labs.rhizome.org/presentations/warc-proposals.html#/) in 2018 to add *WARC-Source-URI* and *WARC-Creation-Date* to the [WARC Standard](https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.1/). These headers allow for WARC records to retain information about when and from where the web content was crawled, but also to allow the *WARC-Target-URI* and *WARC-Date* to reflect how the record should be indexed and made accessible. It doesn't look like these headers have made it into the v1.1 specification, but seeing as how they shouldn't disturb indexing or playback they can be used without causing problems. Admittedly this is a corner case that not many people would encounter unless they are reconstructing parts of the web based on materials that are no longer available on the web. But maybe it's something that would be done more often if there were tools that supported it?
+Perhaps these were records were left because they weren't sure how modify the WARC records that wget generated? Analysis shows that some WARC records can have up to 3 CDX entries. It's hard to say now 8 years later what the motivation for this was, but to retain backwards compatibility with the access points that are currently provided we will want to create WARC records for all of the access points in the CDX file.
+
+Moving these WARC records into the new pywb environment requires them to be reindexed. The decisions that Ahmed made in constructing these CDX entries need to be preserved, but instead of putting them into the CDX index by hand we want to persist them in the WARC data so that they can be reindexed now, and in the future, without disturbing their URL and date/time access points. Other parts of the Stanford website and the larger web have linked to these pages in the archive, and we want those to continue to work.
+
+If we simply convert these CDX entries to CDXJ then future archivists will need to remember to do the same thing if they move the WARC data to a new system. For Stanford the current practice is to treat CDX files as *derivatives* of the WARC data. Apart from system level backups these CDX files are not stored in the Stanford Digital Repository.
+
+To support [our work](https://github.com/sul-dlss/was-pywb/issues/60) to persist this provenance data in the SLAC WARC files we decided to use the Rhizome's [proposed](https://labs.rhizome.org/presentations/warc-proposals.html#/) addition of *WARC-Source-URI* and *WARC-Creation-Date* to the [WARC Standard](https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.1/). These headers allow for WARC records to retain information about when and from where the web content was crawled, but also to allow the *WARC-Target-URI* and *WARC-Date* to reflect how the record should be indexed and made accessible. It doesn't look like these headers have made it into the v1.1 specification, but seeing as how they shouldn't disturb indexing or playback they can be used without causing problems. Admittedly this is a corner case that not many people would encounter unless they are reconstructing parts of the web based on materials that are no longer available on the web. But maybe it's something that would be done more often if there were tools that supported it?
 
 ## Process
 
-The process for rewriting our WARC data for this SLAC material is to:
+The process for rewriting our WARC data for this SLAC material is to use
+the existing CDX index (256 GB) , which was filtered to only include lines that reference a SLAC WARC file, and is stored in `data/SLAC.cdx`.
 
-1. read each CDX entry
+1. read each SLAC CDX entry from the existing index
 2. get the desired URL (WARC-Target-URI and datetime (WARC-Date).
 3. read the corresponding WARC record
+4. if the WARC record's datetime and URL are *the same* as what is in the CDX entry go back to 1
 4. copy the WARC record's current WARC-Target-URI to WARC-Source-URI
 5. copy the WARC record's current WARC-Date to WARC-Creation-Date
 6. replace the WARC-Target-URI with the one obtained from the CDX entry
 7. replace the WARC-Date with the one obtained from the CDX entry
 8. write the WARC record to a new file
 
-Once we have the new WARC data it can be indexed just like any other content, and we have a record of what actually happened for anyone that looks at the WARC data again. It would be kind of cool if playback interfaces displayed this information, but that's left as an exercise for another time.
+Once the new WARC data has been generated the original WARC data and the new
+WARC_rewrites.warc file can be indexed just like any other content, and there
+is a record of what actually happened for anyone that looks at the WARC data
+again. It would be great if playback interfaces displayed the information in
+the WARC-Creation-Date and WARC-Source-URI headers, but that's left as an
+exercise for another time.
 
-The program `rewrite.py` can read the old CDX data, and write new files with
-the `_2022.warc.gz` suffix. So the data in `SLAC_1998.warc` will be rewritten
-as `SLAC_1998_2022.warc.gz`. The order of the records will be different, since
-they are based on the order in the original CDX file. This reordering doesn't
-matter because these new WARC files are going to be reindexed anyway during the
-move to pywb.
-
-To run `rewrite.py` you'll need to get the data from the SDR and put the files in the data directory. You will need to get them from Argo at:
+To run `rewrite.py` you'll need to get the data from the SDR and put the files in the `data` directory. You can get them from Argo at:
 
     https://argo.stanford.edu/view/druid:wx794kg1767
 
