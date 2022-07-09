@@ -18,19 +18,28 @@ def main():
 
 def rewrite(rec, cdx):
     """
-    If the URL and datetime in the CDX entry are different from what is found in
-    the WARC record, rewrite the WARC record to use the new URL and datetime
-    while recording the old ones using the WARC-Creation-Date and
-    WARC-Source-URI headers. If no change is needed return None.
+    If the URL and datetime in the CDX entry are different from what is 
+    found in the WARC record, rewrite the WARC record to use the new URL 
+    and datetime while recording the old ones using the WARC-Creation-Date 
+    and WARC-Source-URI headers. If no change is needed return None.
     """
+
+    if rec.rec_type != "response":
+        return None
+
     h = rec.rec_headers
-    if rec.rec_type == "response" \
-            and cdx['datetime'] != h['WARC-Date'] \
-            and cdx['url'] != h['WARC-Target-URI']:
+    updated = False
+    if cdx["datetime"] != h["WARC-Date"]:
         h["WARC-Creation-Date"] = h["WARC-Date"]
+        h["WARC-Date"] = cdx["datetime"]
+        updated = True
+
+    if cdx["url"] != h["WARC-Target-URI"]:
         h["WARC-Source-URI"] = h["WARC-Target-URI"]
         h["WARC-Target-URI"] = cdx["url"]
-        h["WARC-Date"] = cdx["datetime"]
+        updated = True
+
+    if updated:
         return rec
     else:
         return None
