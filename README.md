@@ -9,7 +9,7 @@ collection contains three "Web Archive Seed" items:
 
 These items point to web content that has been archived as part of the SDR "Web Archive Crawl" object [druid:wx794kg1767](https://argo.stanford.edu/view/druid:wx794kg1767). As we move this WARC content from OpenWayback to pywb we need to reindex it so that it continues to be available. The problem is that the content was manually added to the CDX index so that content that was archived in 2014 from a archival section of the website appear to be archived at their original times and locations on the web. If we simply reindex the WARC content as is we will lose these access points.
 
-Some details about how this archived content was assembled can be found in this [presentation](https://www.slideshare.net/aalsum/aalsum-iipcga15/0) by Ahmed AlSum in 2015, as well as this paper from [this paper](https://www.slac.stanford.edu/welcome/slac-pub-7636.html) by Jean Marie Deken in 1997.
+Some details about how this archived content was assembled can be found in this [presentation](https://www.slideshare.net/aalsum/aalsum-iipcga15/0) by Ahmed AlSum in 2015, which is also available as a short paper [Reconstruction of the first US Website](https://dl.acm.org/doi/pdf/10.1145/2756406.2756954). In addition Jean Marie Deken, the SLAC Archivist, gave a presentation at the Society of American Archivists in 1997, [First in the Web, But Where are the Pieces](https://www.slac.stanford.edu/welcome/slac-pub-7636.html) which provides details of how the web directories that Ahmed crawled were collected.
 
 ## Provenance
 
