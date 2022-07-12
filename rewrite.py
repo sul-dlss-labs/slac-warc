@@ -6,7 +6,7 @@ import datetime
 from warcio import ArchiveIterator, WARCWriter
 
 def main():
-    fh = open("data/SLAC_2022.warc", "ab")
+    fh = open("data/SLAC_2022.warc", "wb")
     writer = WARCWriter(fh, gzip=False)
     for cdx_line in open("data/SLAC.cdx"):
         cdx = parse_cdx_line(cdx_line)
