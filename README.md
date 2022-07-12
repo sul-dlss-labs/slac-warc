@@ -175,11 +175,11 @@ the existing CDX index (256 GB) , which was filtered to only include lines that 
 8. write the WARC record to a new file
 
 Once the new WARC data has been generated the original WARC data and the new
-WARC_rewrites.warc file can be indexed just like any other content, and there
-is a record of what actually happened for anyone that looks at the WARC data
-again. It would be great if playback interfaces displayed the information in
-the WARC-Creation-Date and WARC-Source-URI headers, but that's left as an
-exercise for another time.
+`SLAC_2022.warc` file can be accessioned as a new SDR item (hopefully how you
+found this documentation), and there is a record of what actually happened for
+anyone that looks at the WARC data again. It would be great if playback
+interfaces displayed the information in the WARC-Creation-Date and
+WARC-Source-URI headers, but that's left as an exercise for another time.
 
 To run `rewrite.py` you'll need to get the data from the SDR and put the files in the `data` directory. You can get them from Argo at:
 
